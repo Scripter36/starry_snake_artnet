@@ -1,5 +1,6 @@
 import asyncio
 from decimal import Clamped
+import json
 from math import ceil, floor
 import pygame
 import random
@@ -109,6 +110,17 @@ class Game:
                         new_movement = pygame.Vector2(-1, 0)
                     elif event.key == pygame.K_RIGHT:
                         new_movement = pygame.Vector2(1, 0)
+                    # save star positions to file
+                    elif event.key == pygame.K_s:
+                        with open('stars.json', 'w') as f:
+                            json.dump(self.stars, f)
+                        continue
+                    # load star positions from file
+                    elif event.key == pygame.K_l:
+                        with open('stars.json', 'r') as f:
+                            self.stars = {float(k):{float(k2):v2 for k2,v2 in v.items()} for k,v in json.load(f).items()}
+                            self.prev_stars = self.stars.copy()
+                        continue
                     if self.state == 'waiting':
                         self.new_game()
                         if new_movement != pygame.Vector2(0, 0):
